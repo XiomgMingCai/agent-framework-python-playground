@@ -1,0 +1,54 @@
+site_name: Microsoft Agent Framework Python 练习
+site_description: 基于 agent_framework 的 Python 学习项目
+site_author: XiongMingcai
+
+repo_name: XiongMingcai/python-agent-framework-playground
+repo_url: https://github.com/XiongMingcai/python-agent-framework-playground
+
+theme:
+  name: material
+  language: zh
+  palette:
+    - media: "(prefers-color-scheme: light)"
+      scheme: default
+      primary: indigo
+      accent: indigo
+      toggle:
+        icon: material/brightness-7
+        name: Switch to dark mode
+    - media: "(prefers-color-scheme: dark)"
+      scheme: slate
+      primary: indigo
+      accent: indigo
+      toggle:
+        icon: material/brightness-4
+        name: Switch to light mode
+  features:
+    - navigation.tabs
+    - navigation.sections
+    - navigation.expand
+    - search.suggest
+    - search.highlight
+    - content.tabs.link
+    - content.code.copy
+
+nav:
+  - 首页: index.md
+  - 基础对话: basic.md
+  - 流式输出: streaming.md
+  - 工具调用: tool-use.md
+  - 多轮对话: multi-turn.md
+
+markdown_extensions:
+  - pymdownx.highlight:
+      anchor_linenums: true
+  - pymdownx.inlinehilite
+  - pymdownx.snippets
+  - pymdownx.superfences
+  - admonition
+  - pymdownx.details
+  - pymdownx.mark
+  - attr_list
+  - md_in_html
+  - toc:
+      permalink: true

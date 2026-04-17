@@ -1,0 +1,17 @@
+[project]
+name = "my-agent-practice"
+version = "0.1.0"
+requires-python = ">=3.10"
+dependencies = [
+    "agent-framework",
+    "python-dotenv",
+    "mkdocs",
+    "mkdocs-material",
+]
+
+[tool.uv]
+dev-dependencies = []
+
+[tool.pylance]
+# 可选：增强类型检查
+typeCheckingMode = "standard"   # 或 "strict"
