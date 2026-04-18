@@ -22,6 +22,9 @@ AI_MODEL=Qwen/Qwen3.5-35B-A3B
 | [流式输出](streaming.md) | 实时流式响应，提升用户体验 | ⭐⭐ |
 | [工具调用](tool-use.md) | 让 Agent 调用外部函数，扩展执行能力 | ⭐⭐⭐ |
 | [多轮对话](multi-turn.md) | 让 Agent 记住对话历史，支持连续上下文交互 | ⭐⭐⭐ |
+| [Memory](memory.md) | 通过 ContextProvider 实现自定义记忆与持久化 | ⭐⭐⭐⭐ |
+| [Workflows](workflow.md) | 串联多个步骤的工作流编排 | ⭐⭐⭐⭐ |
+| [Hosting](hosting.md) | 将 Agent 部署到本地服务器或云端 | ⭐⭐⭐⭐ |
 
 ## 技术栈
 

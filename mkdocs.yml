@@ -38,6 +38,9 @@ nav:
   - 流式输出: streaming.md
   - 工具调用: tool-use.md
   - 多轮对话: multi-turn.md
+  - Memory: memory.md
+  - Workflows: workflow.md
+  - Hosting: hosting.md
 
 markdown_extensions:
   - pymdownx.highlight:

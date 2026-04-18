@@ -73,6 +73,9 @@ nav:
   - 流式输出: streaming.md
   - 工具调用: tool-use.md
   - 多轮对话: multi-turn.md
+  - Memory: memory.md
+  - Workflows: workflow.md
+  - Hosting: hosting.md
 ```
 - 最多两层（首页 + 二级页面）
 - 避免超过 7 个页面，考虑拆分子章节
@@ -93,7 +96,13 @@ examples/
 │   └── main.py
 ├── tool_use/     # 工具调用示例
 │   └── main.py
-└── multi_turn/   # 多轮对话示例
+├── multi_turn/   # 多轮对话示例
+│   └── main.py
+├── memory/       # Memory & Persistence 示例
+│   └── main.py
+├── workflow/     # Workflows 示例
+│   └── main.py
+└── hosting/     # Hosting 示例
     └── main.py
 
 docs/
@@ -101,7 +110,10 @@ docs/
 ├── basic.md       # 基础对话文档
 ├── streaming.md   # 流式输出文档
 ├── tool-use.md   # 工具调用文档
-└── multi-turn.md # 多轮对话文档
+├── multi-turn.md # 多轮对话文档
+├── memory.md     # Memory 文档
+├── workflow.md   # Workflows 文档
+└── hosting.md   # Hosting 文档
 ```
 
 ## 经验总结
@@ -144,3 +156,13 @@ docs/
 - `OpenAIChatClient` → Responses API (OpenAI 新版)
 - `OpenAIChatCompletionClient` → Chat Completions API (兼容 SiliconFlow、DeepSeek 等)
 - 选 client 前先确认 API 服务商支持的 API 类型
+
+## Git 提交规范
+- 提交信息使用简洁的程序员风格，不带 Co-Authored-By 信息
+- 格式：`type: 简短描述` + 详细说明（可选）
+- 示例：
+  ```bash
+  git commit -m "feat: 添加流式输出示例"
+  git commit -m "fix: 修复 tool 装饰器导入路径"
+  ```
+- 不要提交包含密钥的文件（.env 等），确保 `.gitignore` 正确配置
