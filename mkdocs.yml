@@ -1,9 +1,9 @@
 site_name: Microsoft Agent Framework Python 练习
 site_description: 基于 agent_framework 的 Python 学习项目
-site_author: XiongMingcai
+site_author: XiomgMingCai
 
-repo_name: XiongMingcai/python-agent-framework-playground
-repo_url: https://github.com/XiongMingcai/python-agent-framework-playground
+repo_name: XiomgMingCai/python-agent-framework-playground
+repo_url: https://github.com/XiomgMingCai/python-agent-framework-playground
 
 theme:
   name: material
