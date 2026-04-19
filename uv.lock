@@ -2308,17 +2308,21 @@ version = "0.1.0"
 source = { virtual = "." }
 dependencies = [
     { name = "agent-framework" },
+    { name = "fastapi" },
     { name = "mkdocs" },
     { name = "mkdocs-material" },
     { name = "python-dotenv" },
+    { name = "uvicorn" },
 ]
 
 [package.metadata]
 requires-dist = [
     { name = "agent-framework" },
+    { name = "fastapi", specifier = ">=0.133.0" },
     { name = "mkdocs" },
     { name = "mkdocs-material" },
     { name = "python-dotenv" },
+    { name = "uvicorn", specifier = ">=0.41.0" },
 ]
 
 [package.metadata.requires-dev]

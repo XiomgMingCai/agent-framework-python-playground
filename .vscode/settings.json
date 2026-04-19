@@ -1,0 +1,31 @@
+{
+    "python.defaultInterpreterPath": ".venv/bin/python",   // uv 会自动创建 .venv
+    "python.envFile": "${workspaceFolder}/.env",
+    
+    // Pylance 配置 - 增强语法和依赖报错提醒
+    "python.languageServer": "Pylance",
+    "python.analysis.typeCheckingMode": "standard",     // 推荐用 standard 或 strict
+    "python.analysis.autoSearchPaths": true,
+    "python.analysis.useLibraryCodeForTypes": true,
+    "python.analysis.diagnosticMode": "workspace",
+    "python.analysis.stubPath": "stubs",                // 可选
+
+    // 排除不必要的文件夹，提升性能和减少假报错
+    "files.exclude": {
+        "**/.git": true,
+        "**/.svn": true,
+        "**/.hg": true,
+        "**/CVS": true,
+        "**/.DS_Store": true,
+        "**/__pycache__": true,
+        "**/.pytest_cache": true,
+        "**/.uv": true
+    },
+
+    // 推荐启用这些诊断（让 import 报错更明显）
+    "python.analysis.diagnosticSeverityOverrides": {
+        "reportMissingImports": "error",
+        "reportMissingModuleSource": "warning",
+        "reportUndefinedVariable": "error"
+    }
+}

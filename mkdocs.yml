@@ -24,23 +24,78 @@ theme:
         icon: material/brightness-4
         name: Switch to light mode
   features:
-    - navigation.tabs
     - navigation.sections
     - navigation.expand
     - search.suggest
     - search.highlight
-    - content.tabs.link
     - content.code.copy
 
 nav:
   - 首页: index.md
-  - 基础对话: basic.md
-  - 流式输出: streaming.md
-  - 工具调用: tool-use.md
-  - 多轮对话: multi-turn.md
-  - Memory: memory.md
-  - Workflows: workflow.md
-  - Hosting: hosting.md
+  - 基础:
+    - 基础对话: basic.md
+    - 流式输出: streaming.md
+    - 工具调用: tool-use.md
+    - 多轮对话: multi-turn.md
+  - Agents:
+    - 概述: agents/overview.md
+    - 运行 Agent: agents/running-agents.md
+    - 结构化输出: agents/structured-output.md
+    - 后台响应: agents/background-responses.md
+    - Declarative Agents: agents/declarative-agents.md
+    - Agent Pipeline: agents/agent-pipeline.md
+    - Multimodal: agents/multimodal.md
+    - Agent Safety: agents/agent-safety.md
+    - Session: agents/session.md
+    - Observability: agents/observability.md
+    - RAG: agents/rag.md
+    - Agent Skills: agents/agent-skills.md
+    - Context Providers: agents/context-providers.md
+    - Memory:
+      - 概述: agents/memory/index.md
+      - 存储: agents/memory/storage.md
+      - 压缩: agents/memory/compaction.md
+    - Tools:
+      - 概述: agents/tools/index.md
+      - 函数工具: agents/tools/function-tools.md
+      - 工具审批: agents/tools/tool-approval.md
+      - Code Interpreter: agents/tools/code-interpreter.md
+      - File Search: agents/tools/file-search.md
+      - Web Search: agents/tools/web-search.md
+      - Hosted MCP Tools: agents/tools/hosted-mcp-tools.md
+      - Local MCP Tools: agents/tools/local-mcp-tools.md
+    - Middleware:
+      - 概述: agents/middleware/index.md
+      - 定义中间件: agents/middleware/defining.md
+      - Chat 级别: agents/middleware/chat-level.md
+      - Agent vs Run Scope: agents/middleware/agent-vs-run-scope.md
+      - Termination: agents/middleware/termination.md
+      - Result Overrides: agents/middleware/result-overrides.md
+      - Exception Handling: agents/middleware/exception-handling.md
+      - Shared State: agents/middleware/shared-state.md
+      - Runtime Context: agents/middleware/runtime-context.md
+  - 高级:
+    - 多 Agent 协作: multi-agent.md
+    - Memory: memory.md
+    - Custom Agents: custom-agents.md
+    - Structured Output: structured-output.md
+    - Background Responses: background-responses.md
+    - Hosting: hosting.md
+  - Workflows:
+    - 概述: workflow.md
+    - Executors: workflow/executors.md
+    - Edges: workflow/edges.md
+    - Events: workflow/events.md
+    - Agents in Workflows: workflow/agents-in-workflows.md
+    - State Management: workflow/state.md
+    - Checkpoints: workflow/checkpoints.md
+    - Human-in-the-Loop: workflow/human-in-the-loop.md
+    - Declarative Workflows: workflow/declarative.md
+    - Observability: workflow/observability.md
+    - Workflows as Agents: workflow/workflows-as-agents.md
+    - Visualization: workflow/visualization.md
+  - A2A:
+    - 概述: a2a/index.md
 
 markdown_extensions:
   - pymdownx.highlight:

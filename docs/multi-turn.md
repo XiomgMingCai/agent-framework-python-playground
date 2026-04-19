@@ -1,265 +1,55 @@
-# 多轮对话
+# Item 4: Pass Full History to Each Turn, Not Just the Latest Message
 
-让 Agent 记住对话历史，支持连续上下文的多轮交互。
+多轮对话的关键：每次调用都要传完整的历史，而不是只传新消息。
 
-## 前置知识
+## 问题
 
-- 已完成[工具调用](tool-use.md)
-- 了解 Python `list` 与异步编程基础
-
-## 核心概念
-
-```
-第1轮: User → Agent → Response
-                ↓
-         保存对话历史
-                ↓
-第2轮: User → Agent (携带历史) → Response
-                ↓
-         更新对话历史
-                ↓
-第3轮: User → Agent (携带历史) → Response
-```
-
-## 示例代码
-
-**文件：** `examples/multi_turn/main.py`
+新手常犯的错误：
 
 ```python
-import asyncio
-import os
-from dotenv import load_dotenv
-
-from agent_framework import Agent, Message
-from agent_framework.openai import OpenAIChatCompletionClient
-
-
-async def chat_loop():
-    load_dotenv()
-
-    api_key  = os.getenv("AI_API_KEY")
-    base_url = os.getenv("AI_BASE_URL")
-    model    = os.getenv("AI_MODEL")
-
-    if not all([api_key, base_url, model]):
-        raise ValueError("请在 .env 中配置 AI_API_KEY、AI_BASE_URL、AI_MODEL")
-
-    client = OpenAIChatCompletionClient(
-        api_key=api_key,
-        base_url=base_url,
-        model=model,
-    )
-
-    agent = Agent(
-        client=client,
-        name="ChatAgent",
-        instructions=(
-            "你是一个友好的助手，能够记住对话历史并保持上下文连贯。\n"
-            "回答时可以引用之前的对话内容。"
-        ),
-    )
-
-    # ── 对话历史 ──────────────────────────────────────────
-    history: list[Message] = []
-
-    print("=" * 50)
-    print("  多轮对话 Demo  (输入 'exit' 退出, 'clear' 清空历史)")
-    print("=" * 50)
-
-    while True:
-        user_input = input("\nYou : ").strip()
-        if not user_input:
-            continue
-        if user_input.lower() == "exit":
-            break
-        if user_input.lower() == "clear":
-            history.clear()
-            print("[对话历史已清空]")
-            continue
-        if user_input.lower() == "history":
-            _print_history(history)
-            continue
-
-        # 将用户消息加入历史
-        history.append(Message(role="user", contents=[user_input]))
-
-        # 流式调用，携带历史
-        print("Agent: ", end="", flush=True)
-        full_response = ""
-
-        stream = await agent.run(messages=history, stream=True)
-
-        async for update in stream:
-            if update.contents:
-                for content in update.contents:
-                    if hasattr(content, 'text') and content.text:
-                        print(content.text, end="", flush=True)
-                        full_response += content.text
-
-        print()
-
-        if full_response:
-            history.append(Message(role="assistant", contents=[full_response]))
-
-        turns = len(history) // 2
-        print(f"  [当前对话：第 {turns} 轮，共 {len(history)} 条消息]")
-
-
-def _print_history(history: list[Message]):
-    if not history:
-        print("  [历史为空]")
-        return
-    print("\n─── 对话历史 ───")
-    for i, msg in enumerate(history, 1):
-        role = "You  " if msg.role == "user" else "Agent"
-        content_text = ""
-        if msg.contents:
-            for c in msg.contents:
-                if hasattr(c, 'text') and c.text:
-                    content_text += c.text
-                elif isinstance(c, str):
-                    content_text += c
-        text = content_text if len(content_text) <= 80 else content_text[:80] + "..."
-        print(f"  {i:02d}. [{role}] {text}")
-    print("────────────────")
-
-
-if __name__ == "__main__":
-    asyncio.run(chat_loop())
+# 错误：只传新消息
+response = await agent.run("我叫李明")
+response = await agent.run("我叫什么名字？")  # Agent 不记得了
 ```
 
-## 运行
+Agent 没有记忆，每次调用都是独立的。
 
-```bash
-uv run examples/multi_turn/main.py
+## 解决方案
+
+维护历史列表，每次传入完整上下文：
+
+```python
+history: list[Message] = []
+
+while True:
+    user_input = input("\nYou: ")
+    history.append(Message(role="user", contents=[user_input]))
+
+    stream = await agent.run(messages=history, stream=True)
+
+    # 收集 Agent 回复
+    full_response = ""
+    async for update in stream:
+        if update.contents:
+            for content in update.contents:
+                if content.text:
+                    full_response += content.text
+
+    # 把 Agent 回复也加入历史
+    history.append(Message(role="assistant", contents=[full_response]))
 ```
-
-## 交互示例
-
-```
-==================================================
-  多轮对话 Demo  (输入 'exit' 退出, 'clear' 清空历史)
-==================================================
-
-You : 我叫李明，是一名 Python 开发者
-Agent: 你好，李明！很高兴认识你。作为一名 Python 开发者，
-       你在做什么类型的项目呢？
-  [当前对话：第 1 轮，共 2 条消息]
-
-You : 我在学习 AI Agent 开发
-Agent: 太棒了，李明！AI Agent 开发是目前非常热门的方向。
-       结合你的 Python 背景，学习 Agent 框架应该会很顺手。
-  [当前对话：第 2 轮，共 4 条消息]
-
-You : 你还记得我的名字吗？
-Agent: 当然记得！你叫李明，是一名 Python 开发者，
-       目前正在学习 AI Agent 开发。
-  [当前对话：第 3 轮，共 6 条消息]
-
-You : history
-─── 对话历史 ───
-  01. [You  ] 我叫李明，是一名 Python 开发者
-  02. [Agent] 你好，李明！很高兴认识你。作为一名 Python 开发者，你在做什...
-  03. [You  ] 我在学习 AI Agent 开发
-  04. [Agent] 太棒了，李明！AI Agent 开发是目前非常热门的方向。结合你的 ...
-  05. [You  ] 你还记得我的名字吗？
-  06. [Agent] 当然记得！你叫李明，是一名 Python 开发者，目前正在学习 AI ...
-────────────────
-
-You : clear
-[对话历史已清空]
-
-You : 你还记得我的名字吗？
-Agent: 抱歉，我没有关于你名字的信息，
-       能告诉我你怎么称呼吗？
-  [当前对话：第 1 轮，共 2 条消息]
-
-You : exit
-[对话结束]
-```
-
-## 核心要点
-
-| 组件 | 说明 |
-|------|------|
-| `Message` | 单条消息对象，包含 `role` 与 `contents` |
-| `role="user"` | 用户消息角色 |
-| `role="assistant"` | Agent 消息角色 |
-| `history: list[Message]` | 本地维护的对话历史列表 |
-| `agent.run(messages=history)` | 传入完整历史，Agent 感知上下文 |
 
 ## 历史管理策略
 
-### 无限历史（默认）
+| 策略 | 方法 | 适用场景 |
+|------|------|----------|
+| 无限历史 | `history.append()` | 短对话 |
+| 滑动窗口 | `history[-max_messages:]` | 长对话 |
+| 摘要压缩 | 定期压缩为摘要 | 超长对话 |
 
-```python
-# 所有消息都保留
-history.append(Message(role="user", contents=[user_input]))
-```
+## Things to Remember
 
-### 滑动窗口（控制 Token 消耗）
-
-```python
-MAX_TURNS = 10  # 最多保留 10 轮
-
-def trim_history(history: list, max_turns: int) -> list:
-    """只保留最近 N 轮对话"""
-    max_messages = max_turns * 2  # 每轮 = user + assistant
-    if len(history) > max_messages:
-        return history[-max_messages:]
-    return history
-
-# 调用前裁剪
-trimmed = trim_history(history, MAX_TURNS)
-stream = await agent.run(messages=trimmed, stream=True)
-```
-
-### 系统摘要（长对话压缩）
-
-```python
-async def summarize_history(agent, history: list) -> str:
-    """将历史压缩为摘要"""
-    summary_prompt = "请用 100 字以内总结以下对话内容：\n"
-    for msg in history:
-        role = "用户" if msg.role == "user" else "助手"
-        content = msg.contents[0].text if msg.contents else ""
-        summary_prompt += f"{role}：{content}\n"
-
-    result = await agent.run(summary_prompt)
-    return result.text
-
-# 历史过长时压缩
-if len(history) > 20:
-    summary = await summarize_history(agent, history[:-4])
-    compressed = [
-        Message(role="system", contents=[f"对话摘要：{summary}"])
-    ]
-    history = compressed + history[-4:]  # 摘要 + 最近 2 轮
-```
-
-## 消息结构
-
-```python
-# 完整的消息结构
-Message(
-    role="user",                # user / assistant / system
-    contents=["消息内容"],      # 内容列表
-)
-
-# 对话历史示例
-history = [
-    Message(role="user",      contents=["你好"]),
-    Message(role="assistant", contents=["你好！有什么可以帮你？"]),
-    Message(role="user",      contents=["我叫李明"]),
-    Message(role="assistant", contents=["你好，李明！"]),
-]
-```
-
-## 与单轮对话对比
-
-| 特性 | 单轮对话 | 多轮对话 |
-|------|----------|----------|
-| 上下文记忆 | ❌ 每次独立 | ✅ 携带历史 |
-| Token 消耗 | 低 | 随轮次增加 |
-| 连贯性 | ❌ 无法引用前文 | ✅ 可引用前文 |
-| 适用场景 | 单次查询 | 交互式对话 |
+- `history: list[Message]` = [user, assistant, user, assistant, ...]
+- 每次 `agent.run(messages=history)` 传入完整历史
+- 用户消息加 `role="user"`，Agent 回复加 `role="assistant"`
+- 长对话用滑动窗口裁剪，控制 token 消耗

@@ -94,9 +94,20 @@ examples/
 │   └── main.py
 ├── streaming/     # 流式输出示例
 │   └── main.py
+├── structured_output/  # 结构化输出示例
+│   └── main.py
+├── agent_skills/ # Agent Skills 示例
+│   ├── main.py
+│   └── skills/    # 技能文件目录
+├── custom_agents/  # 自定义 Agent 示例
+│   └── main.py
+├── background_responses/  # 后台响应示例
+│   └── main.py
 ├── tool_use/     # 工具调用示例
 │   └── main.py
 ├── multi_turn/   # 多轮对话示例
+│   └── main.py
+├── multi_agent/  # 多 Agent 协作示例
 │   └── main.py
 ├── memory/       # Memory & Persistence 示例
 │   └── main.py
@@ -109,8 +120,13 @@ docs/
 ├── index.md       # 文档首页
 ├── basic.md       # 基础对话文档
 ├── streaming.md   # 流式输出文档
+├── structured-output.md  # 结构化输出文档
+├── agent-skills.md  # Agent Skills 文档
+├── custom-agents.md  # 自定义 Agent 文档
+├── background-responses.md  # 后台响应文档
 ├── tool-use.md   # 工具调用文档
 ├── multi-turn.md # 多轮对话文档
+├── multi-agent.md  # 多 Agent 协作文档
 ├── memory.md     # Memory 文档
 ├── workflow.md   # Workflows 文档
 └── hosting.md   # Hosting 文档
